@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Inventory - Dashboard</title>
+    <link rel="stylesheet" href="style.css?v=3">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">Inv</div>
+                <span>SmartInv</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-item active">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="#" class="nav-item">
+                    <span>📦</span> Inventory
+                    <span class="badge badge-neutral" style="margin-left: auto; font-size: 0.6rem;">PRO</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span>🧪</span> Activity
+                </a>
+                <a href="#" class="nav-item">
+                    <span>⚙️</span> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar" id="user-avatar">A</div>
+                    <div class="user-info">
+                        <div id="user-name" style="font-weight: 600;">Loading...</div>
+                        <small id="user-role-display">Role...</small>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1 id="page-header">Dashboard Overview</h1>
+                </div>
+                <div class="top-actions">
+                    <span id="env-badge" class="badge badge-neutral">ENV: Loading</span>
+                    <span id="health-badge" class="badge badge-success">● System Healthy</span>
+                    <button id="logout-btn" class="btn btn-danger" title="Logout">
+                        Logout ➔
+                    </button>
+                </div>
+            </header>
+
+            <!-- SECTION: DASHBOARD -->
+            <section id="sec-dashboard" class="section active">
+                <div class="dashboard-grid">
+                    <!-- Stats Row -->
+                    <div class="stats-row">
+                        <!-- Total Products -->
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="color: #60a5fa;">📦</div>
+                                <span class="badge badge-neutral">+2%</span>
+                            </div>
+                            <div class="stat-value" id="stat-total-products">0</div>
+                            <div class="stat-label">Total Products</div>
+                        </div>
+                        <!-- Total Qty -->
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="color: #a78bfa;">📊</div>
+                                <span class="badge badge-neutral">Stable</span>
+                            </div>
+                            <div class="stat-value" id="stat-total-qty">0</div>
+                            <div class="stat-label">Total Quantity</div>
+                        </div>
+                        <!-- Low Stock -->
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon" style="color: #f87171;">⚠️</div>
+                                <span class="badge badge-warning">Needs Action</span>
+                            </div>
+                            <div class="stat-value" id="stat-low-stock" style="color: var(--danger)">0</div>
+                            <div class="stat-label">Low Stock Items</div>
+                        </div>
+                    </div>
+
+                    <!-- Analysis & Controls -->
+                    <div class="content-split">
+                        <!-- Chart -->
+                        <div class="panel-card">
+                            <div class="panel-header">
+                                <h3>Stock Distribution</h3>
+                            </div>
+                            <div class="panel-body" style="display: flex; justify-content: center; height: 300px;">
+                                <canvas id="stockPieChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Bar Chart (New) -->
+                        <div class="panel-card">
+                            <div class="panel-header">
+                                <h3>Product Quantity Levels</h3>
+                            </div>
+                            <div class="panel-body" style="display: flex; justify-content: center; height: 300px;">
+                                <canvas id="stockBarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Logs (Mini) -->
+                        <div class="panel-card" style="flex: 1; max-height: 400px; overflow-y: auto;">
+                            <div class="panel-header">
+                                <h3>Recent Activity</h3>
+                            </div>
+                            <div class="panel-body" id="dashboard-activity-list">
+                                <!-- JS Injected Logs -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: INVENTORY -->
+            <section id="sec-inventory" class="section">
+                <div class="dashboard-grid">
+                    <div class="panel-card" style="grid-column: 1 / -1;">
+                        <div class="panel-header">
+                            <h3>Product Inventory</h3>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="inv-search" class="input-field" placeholder="Search by name..."
+                                    style="padding: 0.4rem 0.8rem; width: 250px;">
+                                <select id="inv-filter" class="input-field"
+                                    style="width: auto; padding: 0.4rem 0.8rem;">
+                                    <option value="all">All Status</option>
+                                    <option value="low">Low Stock</option>
+                                    <option value="out">Out of Stock</option>
+                                </select>
+                                <button id="inv-add-btn" class="btn btn-primary">+ Add Product</button>
+                            </div>
+                        </div>
+
+                        <div class="panel-body" style="padding: 0;">
+                            <div class="product-row row-header">
+                                <div style="flex: 2;">Name</div>
+                                <div style="flex: 1;">Status</div>
+                                <div style="flex: 1;">Quantity</div>
+                                <div style="flex: 1; text-align: right;">Actions</div>
+                            </div>
+                            <div id="inventory-list">
+                                <!-- JS Injected -->
+                            </div>
+                            <!-- Pagination Controls -->
+                            <div class="pagination-controls"
+                                style="padding: 1rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color);">
+                                <button id="prev-page-btn" class="btn btn-icon" disabled>❮</button>
+                                <span id="page-info" style="color: var(--text-secondary); font-size: 0.9rem;">Page
+                                    1</span>
+                                <button id="next-page-btn" class="btn btn-icon">❯</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: ACTIVITY -->
+            <section id="sec-activity" class="section">
+                <div class="dashboard-grid">
+                    <div class="panel-card" style="grid-column: 1 / -1;">
+                        <div class="panel-header">
+                            <h3>System Activity Log</h3>
+                            <button class="btn btn-icon" onclick="fetchData()">🔄 Refresh</button>
+                        </div>
+                        <div class="panel-body" style="padding: 0;">
+                            <div class="product-row row-header">
+                                <div style="flex: 0 0 50px;"></div>
+                                <div style="flex: 1;">Action</div>
+                                <div style="flex: 3;">Details</div>
+                                <div style="flex: 1; text-align: right;">Time</div>
+                            </div>
+                            <div id="full-activity-list" style="max-height: 70vh; overflow-y: auto;">
+                                <!-- JS Injected -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: SETTINGS -->
+            <section id="sec-settings" class="section">
+                <div class="dashboard-grid">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <h3>System Settings</h3>
+                        </div>
+                        <div class="panel-body" style="padding: 2rem;">
+                            <div class="input-group" style="max-width: 400px;">
+                                <label class="input-label">Low Stock Threshold</label>
+                                <input type="number" id="setting-threshold" class="input-field" value="5">
+                                <button id="save-settings-btn" class="btn btn-primary" style="margin-top: 1rem;">Save
+                                    Configuration</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="delete-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🗑️</div>
+            <h2 style="margin-bottom: 0.5rem;">Delete Item?</h2>
+            <p id="delete-item-name" style="color: var(--text-secondary); margin-bottom: 2rem;">Are you sure you want to
+                remove this item?</p>
+            <div class="modal-actions">
+                <button class="btn" style="background: var(--bg-input); color: white;"
+                    onclick="closeModal()">Cancel</button>
+                <button id="confirm-delete-btn" class="btn btn-danger">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=3"></script>
+</body>
+
+</html>
