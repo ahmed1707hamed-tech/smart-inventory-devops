@@ -1,22 +1,18 @@
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from database import SessionLocal, engine
+from models import Base, Product, Activity
 from pydantic import BaseModel
-import json
-import os
 from datetime import datetime
-from typing import Optional
+from passlib.context import CryptContext
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import Column, Integer, String
 
-app = FastAPI(title="Inventory Service")
+app = FastAPI(title="Inventory Service V2")
 
-# =====================
-# Configuration
-# =====================
-# Read from env vars, default to 'Local'
-ENV_NAME = os.getenv("ENV", "Local")
-
+# =========================
 # CORS
+# =========================
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -25,150 +21,196 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount static files (CSS, JS, images)
-# Ensure the directory "static" exists if you plan to use it, or remove if unused.
-# app.mount("/static", StaticFiles(directory="static"), name="static")
+# =========================
+# Password Hash
+# =========================
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-DATA_FILE = "products.json"
-ACTIVITY_FILE = "activities.json"
 
-# =====================
-# Models
-# =====================
-class Product(BaseModel):
+# =========================
+# User Model (Admin Login)
+# =========================
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True)
+    password = Column(String)
+
+
+# =========================
+# Create tables + Admin
+# =========================
+@app.on_event("startup")
+def on_startup():
+    Base.metadata.create_all(bind=engine)
+
+    db = SessionLocal()
+
+    admin = db.query(User).filter(User.username == "admin").first()
+
+    if not admin:
+        new_admin = User(
+            username="admin",
+            password=pwd_context.hash("admin123")
+        )
+        db.add(new_admin)
+        db.commit()
+
+    db.close()
+
+
+# =========================
+# DB Dependency
+# =========================
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+# =========================
+# Schemas
+# =========================
+class ProductCreate(BaseModel):
     name: str
     quantity: int
+
+
+class ProductResponse(BaseModel):
+    id: int
+    name: str
+    quantity: int
+
+    class Config:
+        from_attributes = True
+
 
 class LoginRequest(BaseModel):
     username: str
     password: str
 
-class Activity(BaseModel):
-    action: str
-    details: str
-    timestamp: str
 
-# =====================
-# Helper functions
-# =====================
-def load_json(filename):
-    if not os.path.exists(filename):
-        return []
-    try:
-        with open(filename, "r") as f:
-            return json.load(f)
-    except json.JSONDecodeError:
-        return []
-
-def save_json(filename, data):
-    with open(filename, "w") as f:
-        json.dump(data, f, indent=2)
-
-def log_activity(action: str, details: str):
-    activities = load_json(ACTIVITY_FILE)
-    new_activity = {
-        "action": action,
-        "details": details,
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-    # Keep only last 50 activities
-    activities.insert(0, new_activity)
-    if len(activities) > 50:
-        activities = activities[:50]
-    save_json(ACTIVITY_FILE, activities)
-
-# =====================
-# Routes
-# =====================
-
+# =========================
+# Health
+# =========================
 @app.get("/health")
-def health_check():
-    """
-    Health check endpoint for DevOps monitoring.
-    """
-    return {
-        "status": "healthy",
-        "env": ENV_NAME,
-        "timestamp": datetime.now().isoformat()
-    }
+def health():
+    return {"status": "ok"}
 
+
+# =========================
+# LOGIN
+# =========================
 @app.post("/login")
-def login(login_request: LoginRequest):
-    # Dummy Auth with Roles
-    if login_request.username == "admin" and login_request.password == "admin":
-        return {
-            "token": "admin-token",
-            "username": "admin",
-            "role": "admin"
-        }
-    elif login_request.username == "viewer" and login_request.password == "viewer":
-        return {
-            "token": "viewer-token",
-            "username": "viewer",
-            "role": "viewer"
-        }
-    raise HTTPException(status_code=401, detail="Invalid credentials")
+def login(data: LoginRequest, db: Session = Depends(get_db)):
 
-@app.get("/products")
-def get_products():
-    return load_json(DATA_FILE)
+    user = db.query(User).filter(User.username == data.username).first()
 
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    if not pwd_context.verify(data.password, user.password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    return {"message": "Login successful"}
+
+
+# =========================
+# CREATE Product
+# =========================
+@app.post("/products", response_model=ProductResponse)
+def create_product(product: ProductCreate, db: Session = Depends(get_db)):
+
+    new_product = Product(
+        name=product.name,
+        quantity=product.quantity
+    )
+
+    db.add(new_product)
+    db.commit()
+    db.refresh(new_product)
+
+    activity = Activity(
+        action="Added",
+        details=f"Added product '{new_product.name}'",
+        timestamp=datetime.utcnow()
+    )
+
+    db.add(activity)
+    db.commit()
+
+    return new_product
+
+
+# =========================
+# READ Products
+# =========================
+@app.get("/products", response_model=list[ProductResponse])
+def get_products(db: Session = Depends(get_db)):
+    return db.query(Product).all()
+
+
+# =========================
+# UPDATE Product
+# =========================
+@app.put("/products/{product_id}", response_model=ProductResponse)
+def update_product(product_id: int, product: ProductCreate, db: Session = Depends(get_db)):
+
+    db_product = db.query(Product).filter(Product.id == product_id).first()
+
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    db_product.name = product.name
+    db_product.quantity = product.quantity
+
+    db.commit()
+    db.refresh(db_product)
+
+    activity = Activity(
+        action="Updated",
+        details=f"Updated product '{db_product.name}'",
+        timestamp=datetime.utcnow()
+    )
+
+    db.add(activity)
+    db.commit()
+
+    return db_product
+
+
+# =========================
+# DELETE Product
+# =========================
+@app.delete("/products/{product_id}")
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+
+    db_product = db.query(Product).filter(Product.id == product_id).first()
+
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    activity = Activity(
+        action="Deleted",
+        details=f"Deleted product '{db_product.name}'",
+        timestamp=datetime.utcnow()
+    )
+
+    db.add(activity)
+    db.commit()
+
+    db.delete(db_product)
+    db.commit()
+
+    return {"message": "Product deleted successfully"}
+
+
+# =========================
+# Activities
+# =========================
 @app.get("/activities")
-def get_activities():
-    return load_json(ACTIVITY_FILE)
-
-@app.post("/products")
-def add_product(product: Product):
-    # Validation
-    if not product.name or product.name.strip() == "":
-        raise HTTPException(status_code=400, detail="Product name cannot be empty")
-    if product.quantity < 0:
-        raise HTTPException(status_code=400, detail="Quantity cannot be negative")
-
-    products = load_json(DATA_FILE)
-
-    # Prevent duplicate
-    for p in products:
-        if p["name"] == product.name:
-            raise HTTPException(status_code=400, detail="Product already exists")
-
-    products.append(product.dict())
-    save_json(DATA_FILE, products)
-    
-    log_activity("Added", f"Added product '{product.name}' with qty {product.quantity}")
-
-    return {"message": "Product added", "product": product}
-
-@app.put("/products/{name}")
-def update_product(name: str, updated_product: Product):
-    if updated_product.quantity < 0:
-        raise HTTPException(status_code=400, detail="Quantity cannot be negative")
-
-    products = load_json(DATA_FILE)
-
-    for product in products:
-        if product["name"] == name:
-            old_qty = product["quantity"]
-            product["quantity"] = updated_product.quantity
-            save_json(DATA_FILE, products)
-            
-            log_activity("Updated", f"Updated '{name}' (Qty: {old_qty} -> {updated_product.quantity})")
-            
-            return {"message": "Product updated", "product": product}
-
-    raise HTTPException(status_code=404, detail="Product not found")
-
-@app.delete("/products/{name}")
-def delete_product(name: str):
-    products = load_json(DATA_FILE)
-
-    for i, product in enumerate(products):
-        if product["name"] == name:
-            deleted = products.pop(i)
-            save_json(DATA_FILE, products)
-            
-            log_activity("Deleted", f"Deleted product '{name}'")
-            
-            return {"message": "Product deleted", "product": deleted}
-
-    raise HTTPException(status_code=404, detail="Product not found")
+def get_activities(db: Session = Depends(get_db)):
+    return db.query(Activity).order_by(Activity.timestamp.desc()).all()
