@@ -13,3 +13,7 @@ __pycache__/
 
 # Jenkins
 jenkins-data/
+venv/
+__pycache__/
+*.pyc
+.env

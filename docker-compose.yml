@@ -51,7 +51,7 @@ services:
       - "80:80"
     volumes:
       # ✅ FIXED (folder mount instead of single file)
-      - ./nginx:/etc/nginx/conf.d:ro
+       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - frontend
       - backend
