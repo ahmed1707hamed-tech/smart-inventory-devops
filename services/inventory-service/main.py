@@ -11,10 +11,7 @@ from sqlalchemy import Column, Integer, String
 # =========================
 # FastAPI App
 # =========================
-app = FastAPI(
-    title="Inventory Service V2",
-    root_path="/api"
-)
+app = FastAPI(title="Inventory Service V2")
 
 # =========================
 # CORS
