@@ -5,13 +5,19 @@ pipeline {
 
         stage('Build Containers') {
             steps {
-                sh 'docker-compose build'
+                sh '''
+                pwd
+                ls -la
+                docker-compose -f docker-compose.yml build
+                '''
             }
         }
 
         stage('Run Application') {
             steps {
-                sh 'docker-compose up -d'
+                sh '''
+                docker-compose -f docker-compose.yml up -d
+                '''
             }
         }
     }
