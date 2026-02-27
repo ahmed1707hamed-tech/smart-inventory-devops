@@ -8,7 +8,13 @@ from passlib.context import CryptContext
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import Column, Integer, String
 
-app = FastAPI(title="Inventory Service V2")
+# =========================
+# FastAPI App
+# =========================
+app = FastAPI(
+    title="Inventory Service V2",
+    root_path="/api"
+)
 
 # =========================
 # CORS
