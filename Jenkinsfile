@@ -1,21 +1,14 @@
-pipeline {
-    agent any
+stage('Deploy') {
+    steps {
+        sh '''
+        cd /tmp
+        rm -rf smart-inventory-devops || true
+        git clone https://github.com/ahmed1707hamed-tech/smart-inventory-devops.git
+        cd smart-inventory-devops
 
-    stages {
-        stage('Deploy') {
-            steps {
-                sh '''
-                cd /tmp
-                rm -rf smart-inventory-devops || true
-                git clone https://github.com/ahmed1707hamed-tech/smart-inventory-devops.git
-                cd smart-inventory-devops
-
-                docker-compose down || true
-                docker rm -f inventory-db inventory-backend inventory-frontend inventory-gateway || true
-
-                docker-compose up -d --build
-                '''
-            }
-        }
+        /usr/local/bin/docker-compose down || true
+        docker rm -f inventory-db inventory-backend inventory-frontend inventory-gateway || true
+        /usr/local/bin/docker-compose up -d --build
+        '''
     }
 }
