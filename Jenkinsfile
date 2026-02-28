@@ -10,8 +10,8 @@ pipeline {
                 git clone https://github.com/ahmed1707hamed-tech/smart-inventory-devops.git
                 cd smart-inventory-devops
 
-                docker compose down || true
-                docker compose up -d --build
+                docker-compose down || true
+                docker-compose up -d --build
                 '''
             }
         }
