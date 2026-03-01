@@ -2,7 +2,7 @@ import requests
 import random
 import time
 
-API_URL = "http://inventory-backend:8000/products"
+API_URL = "http://backend-service:8000/products"
 
 # ===============================
 # Wait for API

@@ -1,0 +1,44 @@
+---
+- name: Setup EC2 for Kubernetes App
+  hosts: ec2
+  become: yes
+
+  tasks:
+
+    - name: Install Docker
+      yum:
+        name: docker
+        state: present
+
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Install Git
+      yum:
+        name: git
+        state: present
+
+    - name: Install k3s
+      shell: curl -sfL https://get.k3s.io | INSTALL_K3S_SKIP_SELINUX_RPM=true sh -
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Clone Project
+      git:
+        repo: https://github.com/ahmed1707hamed-tech/smart-inventory-devops.git
+        dest: /home/ec2-user/app
+        force: yes
+
+    - name: Find Kubernetes yaml files
+      shell: find /home/ec2-user/app -name "*.yaml"
+      register: yaml_files
+
+    - debug:
+        var: yaml_files.stdout_lines
+
+    - name: Deploy Kubernetes manifests
+      shell: /usr/local/bin/k3s kubectl apply -f {{ item }}
+      loop: "{{ yaml_files.stdout_lines }}"

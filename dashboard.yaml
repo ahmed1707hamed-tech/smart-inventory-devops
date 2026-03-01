@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-dashboard
+  template:
+    metadata:
+      labels:
+        app: inventory-dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: ahmed7amed9/inventory-dashboard:v1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-service
+spec:
+  selector:
+    app: inventory-dashboard
+  ports:
+  - port: 80
+    targetPort: 80
