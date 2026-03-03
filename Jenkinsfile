@@ -16,7 +16,7 @@ pipeline {
         stage('Build Dashboard Image') {
             steps {
                 sh '''
-                docker build -t $DASH_IMAGE ./services/dashboard
+                docker build --no-cache -t $DASH_IMAGE ./services/dashboard
                 '''
             }
         }
