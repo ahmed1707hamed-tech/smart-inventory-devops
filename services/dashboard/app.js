@@ -117,9 +117,9 @@ function initDashboard() {
     const nameEl = document.getElementById('user-name');
     const roleEl = document.getElementById('user-role-display');
 
-    if (avatarEl) avatarEl.textContent = (state.user || 'U')[0].toUpperCase();
-    if (nameEl) nameEl.textContent = state.user;
-    if (roleEl) roleEl.textContent = state.role;
+    if (avatarEl) avatarEl.textContent = (state.user || 'A')[0].toUpperCase();
+    if (nameEl) nameEl.textContent = state.user || "Ahmed Hamed";
+    if (roleEl) roleEl.textContent = state.role || "Admin";
 
     // Sidebar Navigation
     els.navItems.forEach(item => {
