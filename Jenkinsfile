@@ -2,16 +2,21 @@ pipeline {
     agent any
 
     stages {
-        stage('Deploy') {
+
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                cd /tmp
-                rm -rf smart-inventory-devops || true
-                git clone https://github.com/ahmed1707hamed-tech/smart-inventory-devops.git
-                cd smart-inventory-devops
-
-                docker-compose down || true
-                docker-compose up -d --build
+                kubectl apply -f backend.yaml
+                kubectl apply -f frontend.yaml
+                kubectl apply -f gateway.yaml
+                kubectl apply -f dashboard.yaml
+                kubectl apply -f database.yaml
                 '''
             }
         }
