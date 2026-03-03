@@ -5,7 +5,7 @@ const API_URL = '/api';
 // =======================
 const state = {
     token: localStorage.getItem('token'),
-    user: localStorage.getItem('user'),
+    user: localStorage.getItem('user') || 'Ahmed Hamed',
     role: localStorage.getItem('role') || 'viewer',
     products: [],
     activities: [],
