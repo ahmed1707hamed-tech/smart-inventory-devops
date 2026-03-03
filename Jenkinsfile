@@ -21,20 +21,27 @@ pipeline {
             }
         }
 
+        stage('Login DockerHub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: '0e6ef20b-4651-4b6e-9cb5-9e2180635e00',
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS'
+                )]) {
+                    sh 'echo $PASS | docker login -u $USER --password-stdin'
+                }
+            }
+        }
+
         stage('Push Dashboard Image') {
             steps {
-                sh '''
-                docker push $DASH_IMAGE
-                '''
+                sh 'docker push $DASH_IMAGE'
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh '''
-                kubectl apply -f dashboard.yaml
-                kubectl rollout restart deployment inventory-dashboard
-                '''
+                sh 'kubectl rollout restart deployment inventory-dashboard'
             }
         }
     }
