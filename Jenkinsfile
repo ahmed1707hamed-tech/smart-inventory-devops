@@ -41,7 +41,10 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl rollout restart deployment inventory-dashboard'
+                sh '''
+                kubectl set image deployment/inventory-dashboard dashboard=$DASH_IMAGE
+                kubectl rollout status deployment/inventory-dashboard
+                '''
             }
         }
     }
