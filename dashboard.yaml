@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +15,8 @@ spec:
     spec:
       containers:
       - name: dashboard
-        image: ahmed7amed9/inventory-dashboard:v1
+        image: ahmed7amed9/inventory-dashboard:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 ---
