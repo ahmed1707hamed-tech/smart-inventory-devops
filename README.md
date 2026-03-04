@@ -1,8 +1,13 @@
-# 🚀 Smart Inventory Dashboard (DevOps Edition)
+
+# Smart Inventory Dashboard (DevOps Edition)
+
+A professional, production-ready inventory management system designed for DevOps portfolios. This project demonstrates clean architecture, RESTful API integration, and modern frontend practices without the complexity of heavy build tools.
+
+---
+
+# 🏗 DevOps Architecture
 
 ![Architecture](docs/screenshots/devops_architecture.gif)
-
-A **production-ready inventory management system** designed to demonstrate modern **DevOps practices** including CI/CD automation, containerization, Kubernetes deployment, infrastructure as code, and monitoring.
 
 ---
 
@@ -19,121 +24,84 @@ A **production-ready inventory management system** designed to demonstrate moder
 
 ---
 
-# 📑 Table of Contents
+# 📊 System Screenshots
 
-- [Architecture](#architecture)
-- [Features](#features)
-- [Dashboard](#dashboard)
-- [CI/CD Pipeline](#cicd-pipeline)
-- [Kubernetes Deployment](#kubernetes-deployment)
-- [Monitoring](#monitoring)
-- [API Documentation](#api-documentation)
-- [Tech Stack](#tech-stack)
-- [Setup & Running](#setup--running)
-- [Credentials](#credentials)
-- [API Endpoints](#api-endpoints)
+<p align="center">
+
+<img src="docs/screenshots/dashboard.png" width="30%">
+<img src="docs/screenshots/swagger.png" width="30%">
+<img src="docs/screenshots/jenkins-pipeline.png.png" width="30%">
+
+</p>
 
 ---
 
-# 🏗 Architecture
+# ☸ Kubernetes & Monitoring
 
-![Architecture](docs/screenshots/devops_architecture.gif)
+<p align="center">
 
-This project demonstrates a **complete DevOps workflow**:
+<img src="docs/screenshots/kubernetes-pods.png.png" width="30%">
+<img src="docs/screenshots/grafana-dashboard.png.png" width="30%">
+<img src="docs/screenshots/prometheus-targets.png.png" width="30%">
 
-Developer → GitHub → Jenkins CI/CD → Docker → Kubernetes → Monitoring → Users
-
-Infrastructure is provisioned using **Terraform** and configured using **Ansible**.
-
----
-
-# ✨ Features
-
-## 🚀 DevOps & System
-
-- Health Check API (`/health`)
-- Environment Awareness (Local / Staging / Production)
-- Activity Logging
-- API Failure Handling
-- Infrastructure Automation
+</p>
 
 ---
 
-## 📊 Dashboard
+# Features
 
-![Dashboard](docs/screenshots/dashboard.png)
+### 🚀 DevOps & System
 
-- Real-time inventory statistics
-- Interactive charts using **Chart.js**
-- Dark mode UI
-- Responsive layout
-- Glassmorphism design
-
----
-
-## ⚙️ CI/CD Pipeline
-
-![Jenkins Pipeline](docs/screenshots/jenkins-pipeline.png.png)
-
-Pipeline stages:
-
-1️⃣ Pull code from GitHub  
-2️⃣ Build Docker images  
-3️⃣ Push images to registry  
-4️⃣ Deploy to Kubernetes  
+- **Health Check API**: `/health` endpoint for monitoring system status.
+- **Environment Awareness**: Visual indicators for `Local`, `Staging`, or `Production` environments.
+- **Activity Logging**: Tracks all create, update, and delete operations with timestamps.
+- **Resilience**: Graceful handling of API downtime with UI feedback.
 
 ---
 
-## ☸ Kubernetes Deployment
+### 📊 Dashboard & Analytics
 
-![Kubernetes Pods](docs/screenshots/kubernetes-pods.png.png)
-
-Services run inside Kubernetes pods to ensure:
-
-- Scalability
-- Fault tolerance
-- High availability
+- **Real-time Stats**: Total products, total quantity, and low stock alerts.
+- **Visualizations**: Interactive Bar and Pie charts (using Chart.js).
+- **Advanced UI**: Glassmorphism design, dark mode, and responsive grid layout.
 
 ---
 
-# 📊 Monitoring
+### 🛠 Inventory Management
 
-## Grafana Dashboard
-
-![Grafana](docs/screenshots/grafana-dashboard.png.png)
-
-Grafana visualizes metrics collected by Prometheus.
-
----
-
-## Prometheus Targets
-
-![Prometheus](docs/screenshots/prometheus-targets.png.png)
-
-Prometheus monitors system health, containers, and services.
+- **Search & Filter**: Real-time search by name, and filtering for Low/Out of Stock items.
+- **Sorting**: Sort by Name (A-Z) or Quantity (High/Low).
+- **Stock Badges**: Visual indicators (Green/Yellow/Red) for stock levels.
+- **Toast Notifications**: Immediate feedback for all actions (Success/Error).
 
 ---
 
-# 📘 API Documentation
+### 🔐 Security & Roles
 
-![Swagger](docs/screenshots/swagger.png)
+- **Role-Based Access**:
+  - **Admin**: Full access (Read/Write/Delete).
+  - **Viewer**: Read-only access.
 
-FastAPI automatically generates interactive **Swagger documentation**.
+- **Validation**: Backend enforcement of data integrity (no negative quantities).
 
 ---
 
-# 🧰 Tech Stack
+# Tech Stack
 
 ### Backend
-- Python
-- FastAPI
+- Python (FastAPI)
 
 ### Frontend
 - HTML
 - CSS
 - JavaScript
 
+### Libraries
+- Chart.js
+- Toastify
+
 ### DevOps
+
 - Docker
 - Kubernetes
 - Jenkins
@@ -146,8 +114,45 @@ FastAPI automatically generates interactive **Swagger documentation**.
 
 ---
 
-# 🧱 Project Structure
+# Setup & Running
 
+### 1️⃣ Install Dependencies
+
+```bash
+cd services/inventory-service
+pip install fastapi uvicorn
+
+# Run locally
+uvicorn main:app --reload --port 8000
+
+# Run with Environment Variable (Optional)
+
+$env:ENV="Staging"; uvicorn main:app --reload
+
+services/dashboard/index.html
+
+📌 Project Conclusion
+
+This project demonstrates a complete DevOps workflow by combining modern backend development with cloud-native deployment practices.
+
+Through this system, the following DevOps principles are showcased:
+
+CI/CD automation using Jenkins
+
+Containerization with Docker
+
+Container orchestration using Kubernetes
+
+Infrastructure automation using Terraform and Ansible
+
+Monitoring and observability using Prometheus and Grafana
+
+The goal of this project is to provide a real-world DevOps portfolio project that demonstrates both development and operational skills in a production-style environment.
+
+👨‍💻 Author
+
+Ahmed Hamed
+DevOps Engineer
 
 
 
