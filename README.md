@@ -1,6 +1,6 @@
 # 🚀 Smart Inventory Dashboard (DevOps Edition)
 
-![Architecture](screenshots/devops_architecture.gif)
+![Architecture](docs/screenshots/devops_architecture.gif)
 
 A **production-ready inventory management system** designed to demonstrate modern **DevOps practices** including CI/CD automation, containerization, Kubernetes deployment, infrastructure as code, and monitoring.
 
@@ -61,7 +61,7 @@ Infrastructure is provisioned using **Terraform** and configured using **Ansible
 
 ## 📊 Dashboard
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](docs/screenshots/dashboard.png)
 
 - Real-time inventory statistics
 - Interactive charts using **Chart.js**
@@ -147,6 +147,7 @@ FastAPI automatically generates interactive **Swagger documentation**.
 ---
 
 # 🧱 Project Structure
+
 
 
 
