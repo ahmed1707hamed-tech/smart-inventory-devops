@@ -105,16 +105,119 @@ A professional, production-ready inventory management system designed for DevOps
 - **Data Persistence**: JSON-based (Mock Database)
 
 ---
+# ⚙️ Setup & Running
 
-# Setup & Running
-
-### 1️⃣ Install Dependencies
+## 1️⃣ Install Dependencies
 
 ```bash
 cd services/inventory-service
 pip install fastapi uvicorn
+```
 
+---
 
+## 2️⃣ Start Backend
+
+Run locally:
+
+```bash
+uvicorn main:app --reload --port 8000
+```
+
+Run with Environment Variable (Optional):
+
+```bash
+$env:ENV="Staging"; uvicorn main:app --reload
+```
+
+---
+
+## 3️⃣ Run Frontend
+
+Simply open:
+
+```
+services/dashboard/index.html
+```
+
+---
+
+# ☁️ Infrastructure Deployment
+
+## 4️⃣ Provision Infrastructure with Terraform
+
+```bash
+cd infra/terraform
+
+terraform init
+terraform plan
+terraform apply
+```
+
+---
+
+## 5️⃣ Configure Servers with Ansible
+
+```bash
+cd infra/ansible
+
+ansible-playbook setup.yml
+```
+
+---
+
+## 6️⃣ Deploy Application to Kubernetes
+
+```bash
+cd infra/k8s
+
+kubectl apply -f .
+```
+
+---
+
+## 7️⃣ Verify Deployment
+
+Check Kubernetes Pods:
+
+```bash
+kubectl get pods
+```
+
+You should see running pods similar to:
+
+- inventory-service
+- alert-service
+- dashboard
+- nginx-gateway
+
+---
+
+# 📊 Monitor the System
+
+## 8️⃣ Access Monitoring Stack
+
+Grafana and Prometheus are used for monitoring.
+
+Check Prometheus targets:
+
+```
+http://<server-ip>:9090
+```
+
+Open Grafana dashboard:
+
+```
+http://<server-ip>:3000
+```
+
+# Conclusion
+
+This project demonstrates the implementation of a complete DevOps workflow by building and deploying a smart inventory management system. The application was developed using FastAPI for the backend and a lightweight frontend using HTML, CSS, and JavaScript.
+
+Throughout this project, several DevOps practices were applied, including containerization with Docker, continuous integration and continuous deployment using Jenkins, and orchestration using Kubernetes. Infrastructure provisioning was automated using Terraform, while server configuration was handled through Ansible.
+
+In addition, monitoring and observability were implemented using Prometheus and Grafana to track system performance and service health. The goal of this project was to simulate a real-world DevOps environment and demonstrate practical skills in building, deploying, and managing cloud-native applications.
 
 
 
