@@ -37,7 +37,7 @@ A **production-ready inventory management system** designed to demonstrate moder
 
 # 🏗 Architecture
 
-![Architecture](screenshots/devops_architecture.gif)
+![Architecture](docs/screenshots/devops_architecture.gif)
 
 This project demonstrates a **complete DevOps workflow**:
 
@@ -73,7 +73,7 @@ Infrastructure is provisioned using **Terraform** and configured using **Ansible
 
 ## ⚙️ CI/CD Pipeline
 
-![Jenkins Pipeline](screenshots/jenkins-pipeline.png.png)
+![Jenkins Pipeline](docs/screenshots/jenkins-pipeline.png.png)
 
 Pipeline stages:
 
@@ -86,7 +86,7 @@ Pipeline stages:
 
 ## ☸ Kubernetes Deployment
 
-![Kubernetes Pods](screenshots/kubernetes-pods.png.png)
+![Kubernetes Pods](docs/screenshots/kubernetes-pods.png.png)
 
 Services run inside Kubernetes pods to ensure:
 
@@ -100,7 +100,7 @@ Services run inside Kubernetes pods to ensure:
 
 ## Grafana Dashboard
 
-![Grafana](screenshots/grafana-dashboard.png.png)
+![Grafana](docs/screenshots/grafana-dashboard.png.png)
 
 Grafana visualizes metrics collected by Prometheus.
 
@@ -108,7 +108,7 @@ Grafana visualizes metrics collected by Prometheus.
 
 ## Prometheus Targets
 
-![Prometheus](screenshots/prometheus-targets.png.png)
+![Prometheus](docs/screenshots/prometheus-targets.png.png)
 
 Prometheus monitors system health, containers, and services.
 
@@ -116,7 +116,7 @@ Prometheus monitors system health, containers, and services.
 
 # 📘 API Documentation
 
-![Swagger](screenshots/swagger.png)
+![Swagger](docs/screenshots/swagger.png)
 
 FastAPI automatically generates interactive **Swagger documentation**.
 
@@ -147,6 +147,7 @@ FastAPI automatically generates interactive **Swagger documentation**.
 ---
 
 # 🧱 Project Structure
+
 
 
 
