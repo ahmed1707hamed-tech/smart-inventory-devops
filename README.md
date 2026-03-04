@@ -6,7 +6,7 @@ A professional, production-ready inventory management system designed for DevOps
 
 # 🏗 DevOps Architecture
 
-![Architecture](docs/screenshots/devops_architecture.gif)
+![Architecture](docs/devops_architecture.gif)
 
 ---
 
@@ -113,6 +113,7 @@ A professional, production-ready inventory management system designed for DevOps
 ```bash
 cd services/inventory-service
 pip install fastapi uvicorn
+
 
 
 
