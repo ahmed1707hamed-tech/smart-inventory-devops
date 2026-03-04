@@ -1,74 +1,152 @@
-# Smart Inventory Dashboard (DevOps Edition)
+# 🚀 Smart Inventory Dashboard (DevOps Edition)
 
-A professional, production-ready inventory management system designed for DevOps portfolios. This project demonstrates clean architecture, RESTful API integration, and modern frontend practices without the complexity of heavy build tools.
+![Architecture](screenshots/devops_architecture.gif)
 
-## Features
+A **production-ready inventory management system** designed to demonstrate modern **DevOps practices** including CI/CD automation, containerization, Kubernetes deployment, infrastructure as code, and monitoring.
 
-### 🚀 DevOps & System
--   **Health Check API**: `/health` endpoint for monitoring system status.
--   **Environment Awareness**: Visual indicators for `Local`, `Staging`, or `Production` environments.
--   **Activity Logging**: Tracks all create, update, and delete operations with timestamps.
--   **Resilience**: Graceful handling of API downtime with UI feedback.
+---
 
-### 📊 Dashboard & Analytics
--   **Real-time Stats**: Total products, total quantity, and low stock alerts.
--   **Visualizations**: Interactive Bar and Pie charts (using Chart.js).
--   **Advanced UI**: Glassmorphism design, dark mode, and responsive grid layout.
+# 🏷 DevOps Stack
 
-### 🛠 Inventory Management
--   **Search & Filter**: Real-time search by name, and filtering for Low/Out of Stock items.
--   **Sorting**: Sort by Name (A-Z) or Quantity (High/Low).
--   **Stock Badges**: Visual indicators (Green/Yellow/Red) for stock levels.
--   **Toast Notifications**: Immediate feedback for all actions (Success/Error).
+![Docker](https://img.shields.io/badge/Docker-Containerization-blue)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-blue)
+![Jenkins](https://img.shields.io/badge/Jenkins-CI/CD-red)
+![Terraform](https://img.shields.io/badge/Terraform-Infrastructure-purple)
+![Ansible](https://img.shields.io/badge/Ansible-Automation-red)
+![Prometheus](https://img.shields.io/badge/Prometheus-Monitoring-orange)
+![Grafana](https://img.shields.io/badge/Grafana-Visualization-yellow)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
 
-### 🔐 Security & Roles
--   **Role-Based Access**:
-    -   **Admin**: Full access (Read/Write/Delete).
-    -   **Viewer**: Read-only access.
--   **Validation**: Backend enforcement of data integrity (no negative quantities).
+---
 
-## Tech Stack
+# 📑 Table of Contents
 
--   **Backend**: Python (FastAPI)
--   **Frontend**: Vanilla HTML/CSS/JS (Modern ES6+)
--   **Libraries**: Chart.js (Visualization), Toastify (Notifications)
--   **Data Persistence**: JSON-based (Mock Database)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Dashboard](#dashboard)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Kubernetes Deployment](#kubernetes-deployment)
+- [Monitoring](#monitoring)
+- [API Documentation](#api-documentation)
+- [Tech Stack](#tech-stack)
+- [Setup & Running](#setup--running)
+- [Credentials](#credentials)
+- [API Endpoints](#api-endpoints)
 
-## Setup & Running
+---
 
-1.  **Install Dependencies**:
-    ```bash
-    cd services/inventory-service
-    pip install fastapi uvicorn
-    ```
+# 🏗 Architecture
 
-2.  **Start Backend**:
-    ```bash
-    # Run locally
-    uvicorn main:app --reload --port 8000
-    
-    # Run with Environment Variable (Optional)
-    # Windows (PowerShell)
-    $env:ENV="Staging"; uvicorn main:app --reload
-    ```
+![Architecture](screenshots/devops_architecture.gif)
 
-3.  **Run Frontend**:
-    -   Simply open `services/dashboard/index.html` in your browser.
-    -   Or use a live server extension.
+This project demonstrates a **complete DevOps workflow**:
 
-## Credentials
+Developer → GitHub → Jenkins CI/CD → Docker → Kubernetes → Monitoring → Users
 
-| Role | Username | Password | Permissions |
-|------|----------|----------|-------------|
-| **Admin** | `admin` | `admin` | Full Access |
-| **Viewer** | `viewer` | `viewer` | Read Only |
+Infrastructure is provisioned using **Terraform** and configured using **Ansible**.
 
-## API Endpoints
+---
 
--   `GET /health`: System status.
--   `GET /products`: List all products.
--   `GET /activities`: List recent activities.
--   `POST /login`: Authenticate user.
--   `POST /products`: Add new product (Admin).
--   `PUT /products/{name}`: Update stock (Admin).
--   `DELETE /products/{name}`: Remove product (Admin).
+# ✨ Features
+
+## 🚀 DevOps & System
+
+- Health Check API (`/health`)
+- Environment Awareness (Local / Staging / Production)
+- Activity Logging
+- API Failure Handling
+- Infrastructure Automation
+
+---
+
+## 📊 Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+- Real-time inventory statistics
+- Interactive charts using **Chart.js**
+- Dark mode UI
+- Responsive layout
+- Glassmorphism design
+
+---
+
+## ⚙️ CI/CD Pipeline
+
+![Jenkins Pipeline](screenshots/jenkins-pipeline.png.png)
+
+Pipeline stages:
+
+1️⃣ Pull code from GitHub  
+2️⃣ Build Docker images  
+3️⃣ Push images to registry  
+4️⃣ Deploy to Kubernetes  
+
+---
+
+## ☸ Kubernetes Deployment
+
+![Kubernetes Pods](screenshots/kubernetes-pods.png.png)
+
+Services run inside Kubernetes pods to ensure:
+
+- Scalability
+- Fault tolerance
+- High availability
+
+---
+
+# 📊 Monitoring
+
+## Grafana Dashboard
+
+![Grafana](screenshots/grafana-dashboard.png.png)
+
+Grafana visualizes metrics collected by Prometheus.
+
+---
+
+## Prometheus Targets
+
+![Prometheus](screenshots/prometheus-targets.png.png)
+
+Prometheus monitors system health, containers, and services.
+
+---
+
+# 📘 API Documentation
+
+![Swagger](screenshots/swagger.png)
+
+FastAPI automatically generates interactive **Swagger documentation**.
+
+---
+
+# 🧰 Tech Stack
+
+### Backend
+- Python
+- FastAPI
+
+### Frontend
+- HTML
+- CSS
+- JavaScript
+
+### DevOps
+- Docker
+- Kubernetes
+- Jenkins
+- Terraform
+- Ansible
+- AWS EC2
+- Prometheus
+- Grafana
+- Nginx
+
+---
+
+# 🧱 Project Structure
+
+
+
