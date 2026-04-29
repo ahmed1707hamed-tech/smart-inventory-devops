@@ -8,6 +8,6 @@ data:
         listen 80;
 
         location / {
-            proxy_pass http://inventory-backend:8080;
+            proxy_pass http://backend-service:8000;
         }
     }
